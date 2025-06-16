@@ -70,20 +70,41 @@ class DemoData(Enum):
                                Location(latitude=1.2700, longitude=103.8200),
                                Location(latitude=1.3000, longitude=103.8700))
 
-    # Central Singapore - Reduced for testing
-    CENTRAL = _DemoDataProperties(2001, 15, 2, time(8, 0),  # REDUCED: 15 visits, 2 vehicles
+    # FIXED: Frontend expects these specific enum names
+    SINGAPORE_CENTRAL = _DemoDataProperties(2001, 15, 2, time(8, 0),
+                                          1, 2, 15, 30,
+                                          Location(latitude=1.2700, longitude=103.8200),
+                                          Location(latitude=1.3000, longitude=103.8700))
+    
+    SINGAPORE_EAST = _DemoDataProperties(2002, 15, 2, time(8, 0),
+                                       1, 2, 15, 30,
+                                       Location(latitude=1.3200, longitude=103.9200),
+                                       Location(latitude=1.3800, longitude=104.0000))
+    
+    SINGAPORE_WEST = _DemoDataProperties(2003, 15, 2, time(8, 0),
+                                       1, 2, 15, 30,
+                                       Location(latitude=1.3000, longitude=103.6500),
+                                       Location(latitude=1.3600, longitude=103.7800))
+    
+    SINGAPORE_NORTH = _DemoDataProperties(2004, 15, 2, time(8, 0),
+                                        1, 2, 15, 30,
+                                        Location(latitude=1.4000, longitude=103.7500),
+                                        Location(latitude=1.4500, longitude=103.8800))
+
+    # Keep backward compatibility
+    CENTRAL = _DemoDataProperties(2001, 15, 2, time(8, 0),
                                   1, 2, 15, 30,
                                   Location(latitude=1.2700, longitude=103.8200),
                                   Location(latitude=1.3000, longitude=103.8700))
 
     # Singapore Island-Wide - Reduced for stability
-    SINGAPORE_WIDE = _DemoDataProperties(3001, 30, 3, time(8, 0),  # REDUCED: 30 visits, 3 vehicles
+    SINGAPORE_WIDE = _DemoDataProperties(3001, 30, 3, time(8, 0),
                                          1, 4, 20, 40,
                                          Location(latitude=1.2400, longitude=103.6000),
                                          Location(latitude=1.4700, longitude=104.0200))
 
     # Large Scale Test - For future stress testing
-    LARGE_SCALE = _DemoDataProperties(4001, 50, 5, time(8, 0),  # REDUCED: 50 visits, 5 vehicles
+    LARGE_SCALE = _DemoDataProperties(4001, 50, 5, time(8, 0),
                                       1, 6, 25, 50,
                                       Location(latitude=1.2400, longitude=103.6000),
                                       Location(latitude=1.4700, longitude=104.0200))
@@ -164,8 +185,8 @@ def get_singapore_locations_for_region(demo_data_enum: DemoData, count: int):
         for i in range(count):
             locations.append(central_locations[i % len(central_locations)])
         print(f"📍 Distribution: {count} Central (simple test)")
-            
-    elif demo_data_enum == DemoData.CENTRAL:
+    
+    elif demo_data_enum in [DemoData.CENTRAL, DemoData.SINGAPORE_CENTRAL]:
         # Mostly central with some variety
         central_count = max(1, count * 3 // 4)  # 75% central
         other_count = count - central_count
@@ -179,6 +200,42 @@ def get_singapore_locations_for_region(demo_data_enum: DemoData, count: int):
             locations.append(other_locations[i % len(other_locations)])
             
         print(f"📍 Distribution: {central_count} Central, {other_count} Mixed")
+    
+    elif demo_data_enum == DemoData.SINGAPORE_EAST:
+        # Mostly east locations
+        east_count = max(1, count * 3 // 4)
+        other_count = count - east_count
+        
+        for i in range(east_count):
+            locations.append(east_locations[i % len(east_locations)])
+        for i in range(other_count):
+            locations.append(central_locations[i % len(central_locations)])
+            
+        print(f"📍 Distribution: {east_count} East, {other_count} Central")
+    
+    elif demo_data_enum == DemoData.SINGAPORE_WEST:
+        # Mostly west locations
+        west_count = max(1, count * 3 // 4)
+        other_count = count - west_count
+        
+        for i in range(west_count):
+            locations.append(west_locations[i % len(west_locations)])
+        for i in range(other_count):
+            locations.append(central_locations[i % len(central_locations)])
+            
+        print(f"📍 Distribution: {west_count} West, {other_count} Central")
+    
+    elif demo_data_enum == DemoData.SINGAPORE_NORTH:
+        # Mostly north locations
+        north_count = max(1, count * 3 // 4)
+        other_count = count - north_count
+        
+        for i in range(north_count):
+            locations.append(north_locations[i % len(north_locations)])
+        for i in range(other_count):
+            locations.append(central_locations[i % len(central_locations)])
+            
+        print(f"📍 Distribution: {north_count} North, {other_count} Central")
             
     elif demo_data_enum in [DemoData.SINGAPORE_WIDE, DemoData.LARGE_SCALE]:
         # Island-wide distribution
@@ -203,6 +260,7 @@ def get_singapore_locations_for_region(demo_data_enum: DemoData, count: int):
         # Fallback - use central locations
         for i in range(count):
             locations.append(central_locations[i % len(central_locations)])
+        print(f"📍 Distribution: {count} Central (fallback)")
     
     print(f"📍 Generated {len(locations)} total locations")
     
@@ -276,8 +334,7 @@ def generate_demo_data(demo_data_enum: DemoData) -> VehicleRoutePlan:
     
     print(f"📊 Problem: {demo_data.vehicle_count} vehicles, {demo_data.visit_count} visits")
     
-    # REMOVED: All distance cache initialization
-    # GraphHopper service will handle distance calculations directly
+    # Using GraphHopper for real-time distance calculations
     print(f"✅ Using GraphHopper for real-time distance calculations")
 
     result = VehicleRoutePlan(name=name,
