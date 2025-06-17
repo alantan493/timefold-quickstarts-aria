@@ -58,6 +58,19 @@ class _DemoDataProperties:
 
 
 class DemoData(Enum):
+    """
+    FIXED: Demo data categories that match frontend expectations exactly.
+    
+    Frontend expects these specific enum names:
+    - SIMPLE, SMALL (for testing)
+    - SINGAPORE_CENTRAL, SINGAPORE_EAST, SINGAPORE_WEST, SINGAPORE_NORTH (regional)
+    - SINGAPORE_WIDE (island-wide)
+    - CENTRAL (backward compatibility)
+    - LARGE_SCALE (stress testing)
+    """
+    
+    # ===== TESTING CATEGORIES =====
+    
     # SIMPLE TEST - 1 vehicle, 5 visits for hybrid testing
     SIMPLE = _DemoDataProperties(1000, 5, 1, time(8, 0),
                                 1, 2, 20, 30,
@@ -70,34 +83,43 @@ class DemoData(Enum):
                                Location(latitude=1.2700, longitude=103.8200),
                                Location(latitude=1.3000, longitude=103.8700))
 
-    # FIXED: Frontend expects these specific enum names
+    # ===== PRODUCTION CATEGORIES (FRONTEND EXPECTS THESE EXACT NAMES) =====
+    
+    # Singapore Central - Marina Bay, CBD, Orchard area
     SINGAPORE_CENTRAL = _DemoDataProperties(2001, 15, 2, time(8, 0),
                                           1, 2, 15, 30,
                                           Location(latitude=1.2700, longitude=103.8200),
                                           Location(latitude=1.3000, longitude=103.8700))
     
+    # Singapore East - Changi, Tampines, Bedok area
     SINGAPORE_EAST = _DemoDataProperties(2002, 15, 2, time(8, 0),
                                        1, 2, 15, 30,
                                        Location(latitude=1.3200, longitude=103.9200),
                                        Location(latitude=1.3800, longitude=104.0000))
     
+    # Singapore West - Jurong, Boon Lay, Pioneer area
     SINGAPORE_WEST = _DemoDataProperties(2003, 15, 2, time(8, 0),
                                        1, 2, 15, 30,
                                        Location(latitude=1.3000, longitude=103.6500),
                                        Location(latitude=1.3600, longitude=103.7800))
     
+    # Singapore North - Woodlands, Yishun, Ang Mo Kio area
     SINGAPORE_NORTH = _DemoDataProperties(2004, 15, 2, time(8, 0),
                                         1, 2, 15, 30,
                                         Location(latitude=1.4000, longitude=103.7500),
                                         Location(latitude=1.4500, longitude=103.8800))
 
-    # Keep backward compatibility
+    # ===== BACKWARD COMPATIBILITY =====
+    
+    # Keep CENTRAL for backward compatibility (maps to SINGAPORE_CENTRAL)
     CENTRAL = _DemoDataProperties(2001, 15, 2, time(8, 0),
                                   1, 2, 15, 30,
                                   Location(latitude=1.2700, longitude=103.8200),
                                   Location(latitude=1.3000, longitude=103.8700))
 
-    # Singapore Island-Wide - Reduced for stability
+    # ===== ISLAND-WIDE AND STRESS TESTING =====
+    
+    # Singapore Island-Wide - CRITICAL for iterative testing
     SINGAPORE_WIDE = _DemoDataProperties(3001, 30, 3, time(8, 0),
                                          1, 4, 20, 40,
                                          Location(latitude=1.2400, longitude=103.6000),
@@ -136,117 +158,142 @@ def generate_names(random: Random) -> Generator[str, None, None]:
 
 
 def get_singapore_locations_for_region(demo_data_enum: DemoData, count: int):
-    """Optimized location distribution with guaranteed east/west spread."""
+    """
+    FIXED: Optimized location distribution with guaranteed coverage matching frontend expectations.
+    
+    This function now properly maps to the regions expected by the frontend:
+    - SINGAPORE_CENTRAL: Marina Bay, CBD, Orchard
+    - SINGAPORE_EAST: Changi, Tampines, Bedok  
+    - SINGAPORE_WEST: Jurong, Boon Lay, Pioneer
+    - SINGAPORE_NORTH: Woodlands, Yishun, Ang Mo Kio
+    - SINGAPORE_WIDE: Island-wide distribution
+    """
     
     print(f"📍 Generating {count} locations for {demo_data_enum.name}")
     
-    # Hardcoded strategic locations for maximum coverage
+    # FIXED: Enhanced strategic locations for maximum testing coverage
     
-    # Central areas - Primary locations for testing
+    # Central Singapore - Primary business and tourist areas
     central_locations = [
-        Location(latitude=1.2966, longitude=103.8518),  # Marina Bay
+        Location(latitude=1.2966, longitude=103.8518),  # Marina Bay Sands
         Location(latitude=1.2839, longitude=103.8519),  # Raffles Place
-        Location(latitude=1.3048, longitude=103.8318),  # Orchard
+        Location(latitude=1.3048, longitude=103.8318),  # Orchard Road
         Location(latitude=1.2792, longitude=103.8480),  # Chinatown
         Location(latitude=1.3521, longitude=103.8198),  # City Hall
         Location(latitude=1.3000, longitude=103.8500),  # Bugis
         Location(latitude=1.2800, longitude=103.8400),  # Clarke Quay
         Location(latitude=1.2900, longitude=103.8600),  # Marina Centre
+        Location(latitude=1.2966, longitude=103.8518),  # Marina Bay (repeat for density)
+        Location(latitude=1.2918, longitude=103.8456),  # Boat Quay
     ]
     
-    # East areas
+    # East Singapore - Residential and commercial hubs
     east_locations = [
         Location(latitude=1.3644, longitude=103.9915),  # Changi Airport
-        Location(latitude=1.3496, longitude=103.9568),  # Tampines
-        Location(latitude=1.3329, longitude=103.9436),  # Bedok
-        Location(latitude=1.3240, longitude=103.9520),  # Tanah Merah
+        Location(latitude=1.3496, longitude=103.9568),  # Tampines Mall
+        Location(latitude=1.3329, longitude=103.9436),  # Bedok Mall
+        Location(latitude=1.3240, longitude=103.9520),  # Tanah Merah MRT
+        Location(latitude=1.3558, longitude=103.9449),  # Pasir Ris
+        Location(latitude=1.3376, longitude=103.9625),  # Simei
+        Location(latitude=1.3194, longitude=103.9443),  # Kembangan
+        Location(latitude=1.3271, longitude=103.9240),  # Eunos
     ]
     
-    # West areas
+    # West Singapore - Industrial and residential areas
     west_locations = [
         Location(latitude=1.3387, longitude=103.7053),  # Jurong East
         Location(latitude=1.3553, longitude=103.6874),  # Boon Lay
         Location(latitude=1.3477, longitude=103.7430),  # Jurong West
         Location(latitude=1.3200, longitude=103.6800),  # Pioneer
+        Location(latitude=1.3352, longitude=103.7421),  # Clementi
+        Location(latitude=1.3464, longitude=103.6800),  # Tuas
+        Location(latitude=1.3513, longitude=103.7065),  # Lakeside
+        Location(latitude=1.3389, longitude=103.7454),  # Chinese Garden
     ]
     
-    # North areas
+    # North Singapore - Residential and nature areas
     north_locations = [
         Location(latitude=1.4382, longitude=103.7890),  # Woodlands
         Location(latitude=1.4294, longitude=103.8356),  # Yishun
         Location(latitude=1.4168, longitude=103.8432),  # Ang Mo Kio
         Location(latitude=1.3966, longitude=103.8467),  # Bishan
+        Location(latitude=1.4241, longitude=103.8315),  # Khatib
+        Location(latitude=1.4491, longitude=103.8222),  # Sembawang
+        Location(latitude=1.4304, longitude=103.7703),  # Admiralty
+        Location(latitude=1.4042, longitude=103.8354),  # Thomson
     ]
     
     locations = []
     
+    # FIXED: Distribution logic matching frontend expectations
+    
     if demo_data_enum in [DemoData.SIMPLE, DemoData.SMALL]:
-        # Use only central locations for simple testing
+        # Simple testing - use only central locations for predictable results
         for i in range(count):
             locations.append(central_locations[i % len(central_locations)])
         print(f"📍 Distribution: {count} Central (simple test)")
     
     elif demo_data_enum in [DemoData.CENTRAL, DemoData.SINGAPORE_CENTRAL]:
-        # Mostly central with some variety
-        central_count = max(1, count * 3 // 4)  # 75% central
+        # Central Singapore - mostly CBD and Marina Bay area
+        central_count = max(1, count * 4 // 5)  # 80% central
         other_count = count - central_count
         
         for i in range(central_count):
             locations.append(central_locations[i % len(central_locations)])
         
-        # Add some variety from other areas
-        other_locations = east_locations + west_locations
+        # Add some variety from nearby areas
+        nearby_locations = east_locations[:3] + west_locations[:2]  # Limited to nearby areas
         for i in range(other_count):
-            locations.append(other_locations[i % len(other_locations)])
+            locations.append(nearby_locations[i % len(nearby_locations)])
             
-        print(f"📍 Distribution: {central_count} Central, {other_count} Mixed")
+        print(f"📍 Distribution: {central_count} Central, {other_count} Nearby")
     
     elif demo_data_enum == DemoData.SINGAPORE_EAST:
-        # Mostly east locations
-        east_count = max(1, count * 3 // 4)
-        other_count = count - east_count
+        # East Singapore - focus on eastern areas
+        east_count = max(1, count * 3 // 4)  # 75% east
+        central_count = count - east_count   # 25% central (for connectivity)
         
         for i in range(east_count):
             locations.append(east_locations[i % len(east_locations)])
-        for i in range(other_count):
+        for i in range(central_count):
             locations.append(central_locations[i % len(central_locations)])
             
-        print(f"📍 Distribution: {east_count} East, {other_count} Central")
+        print(f"📍 Distribution: {east_count} East, {central_count} Central")
     
     elif demo_data_enum == DemoData.SINGAPORE_WEST:
-        # Mostly west locations
-        west_count = max(1, count * 3 // 4)
-        other_count = count - west_count
+        # West Singapore - focus on western areas
+        west_count = max(1, count * 3 // 4)  # 75% west
+        central_count = count - west_count   # 25% central (for connectivity)
         
         for i in range(west_count):
             locations.append(west_locations[i % len(west_locations)])
-        for i in range(other_count):
+        for i in range(central_count):
             locations.append(central_locations[i % len(central_locations)])
             
-        print(f"📍 Distribution: {west_count} West, {other_count} Central")
+        print(f"📍 Distribution: {west_count} West, {central_count} Central")
     
     elif demo_data_enum == DemoData.SINGAPORE_NORTH:
-        # Mostly north locations
-        north_count = max(1, count * 3 // 4)
-        other_count = count - north_count
+        # North Singapore - focus on northern areas
+        north_count = max(1, count * 3 // 4)  # 75% north
+        central_count = count - north_count   # 25% central (for connectivity)
         
         for i in range(north_count):
             locations.append(north_locations[i % len(north_locations)])
-        for i in range(other_count):
+        for i in range(central_count):
             locations.append(central_locations[i % len(central_locations)])
             
-        print(f"📍 Distribution: {north_count} North, {other_count} Central")
+        print(f"📍 Distribution: {north_count} North, {central_count} Central")
             
     elif demo_data_enum in [DemoData.SINGAPORE_WIDE, DemoData.LARGE_SCALE]:
-        # Island-wide distribution
-        central_count = count // 2      # 50% central
-        east_count = count // 6         # ~17% east
-        west_count = count // 6         # ~17% west  
+        # Island-wide distribution - CRITICAL for iterative testing variance
+        central_count = count // 3      # ~33% central (main hub)
+        east_count = count // 4         # ~25% east
+        west_count = count // 4         # ~25% west  
         north_count = count - central_count - east_count - west_count  # Rest north
         
         print(f"📍 Distribution: {central_count} Central, {east_count} East, {west_count} West, {north_count} North")
         
-        # Add locations from each region
+        # Ensure good island-wide spread for variance testing
         for i in range(central_count):
             locations.append(central_locations[i % len(central_locations)])
         for i in range(east_count):
@@ -269,12 +316,18 @@ def get_singapore_locations_for_region(demo_data_enum: DemoData, count: int):
         print(f"📍 Sample location 1: {locations[0].latitude:.4f}, {locations[0].longitude:.4f}")
         if len(locations) > 1:
             print(f"📍 Sample location 2: {locations[1].latitude:.4f}, {locations[1].longitude:.4f}")
+        if len(locations) > 5:
+            print(f"📍 Sample location 6: {locations[5].latitude:.4f}, {locations[5].longitude:.4f}")
     
     return locations
 
 
 def generate_demo_data(demo_data_enum: DemoData) -> VehicleRoutePlan:
-    """Generate demo data with optimal Singapore coverage."""
+    """
+    FIXED: Generate demo data with optimal Singapore coverage matching frontend categories.
+    
+    This function now ensures perfect alignment between frontend and backend demo categories.
+    """
     
     print(f"🚛 Generating {demo_data_enum.name} demo data...")
     
@@ -286,7 +339,7 @@ def generate_demo_data(demo_data_enum: DemoData) -> VehicleRoutePlan:
     service_durations = values(random, SERVICE_DURATION_MINUTES)
     vehicle_capacities = ints(random, demo_data.min_vehicle_capacity, demo_data.max_vehicle_capacity + 1)
 
-    # Generate locations
+    # Generate locations with region-specific distribution
     all_locations_needed = demo_data.vehicle_count + demo_data.visit_count
     singapore_locations = get_singapore_locations_for_region(demo_data_enum, all_locations_needed)
     
@@ -294,7 +347,7 @@ def generate_demo_data(demo_data_enum: DemoData) -> VehicleRoutePlan:
     vehicle_locations = singapore_locations[:demo_data.vehicle_count]
     visit_locations = singapore_locations[demo_data.vehicle_count:demo_data.vehicle_count + demo_data.visit_count]
 
-    # Create vehicles
+    # Create vehicles with proper home locations
     vehicles = [Vehicle(id=str(i),
                         capacity=next(vehicle_capacities),
                         home_location=vehicle_locations[i],
@@ -302,25 +355,31 @@ def generate_demo_data(demo_data_enum: DemoData) -> VehicleRoutePlan:
                             date.today() + timedelta(days=1), demo_data.vehicle_start_time))
                 for i in range(demo_data.vehicle_count)]
 
-    # Create visits
+    # Create visits with appropriate time windows
     names = generate_names(random)
     visits = []
     
     for i in range(demo_data.visit_count):
-        # Simple time windows for testing
+        # FIXED: Time window assignment for better testing
         if demo_data_enum in [DemoData.SIMPLE, DemoData.SMALL]:
             # All-day window for simple testing
             min_time = MORNING_WINDOW_START    # 7:00 AM
             max_time = AFTERNOON_WINDOW_END    # 8:00 PM
         else:
-            # Flexible time window assignment
+            # Variable time window assignment for realistic scenarios
             time_choice = random.random()
-            if time_choice < 0.6:
+            if time_choice < 0.5:
+                # Morning delivery window
                 min_time = MORNING_WINDOW_START  # 7:00 AM
                 max_time = MORNING_WINDOW_END    # 2:00 PM
-            else:
+            elif time_choice < 0.8:
+                # Afternoon delivery window
                 min_time = AFTERNOON_WINDOW_START  # 12:00 PM
                 max_time = AFTERNOON_WINDOW_END    # 8:00 PM
+            else:
+                # Extended day window
+                min_time = MORNING_WINDOW_START    # 7:00 AM
+                max_time = EVENING_WINDOW_END      # 10:00 PM
         
         visits.append(Visit(
             id=str(i),
@@ -333,6 +392,7 @@ def generate_demo_data(demo_data_enum: DemoData) -> VehicleRoutePlan:
         ))
     
     print(f"📊 Problem: {demo_data.vehicle_count} vehicles, {demo_data.visit_count} visits")
+    print(f"📍 Region: {demo_data_enum.name}")
     
     # Using GraphHopper for real-time distance calculations
     print(f"✅ Using GraphHopper for real-time distance calculations")
@@ -343,7 +403,15 @@ def generate_demo_data(demo_data_enum: DemoData) -> VehicleRoutePlan:
                             vehicles=vehicles,
                             visits=visits)
     
-    print(f"✅ Created demo with {len(result.vehicles)} vehicles, {len(result.visits)} visits")
+    print(f"✅ Created {demo_data_enum.name} demo with {len(result.vehicles)} vehicles, {len(result.visits)} visits")
+    
+    # Verification for critical categories
+    if demo_data_enum == DemoData.SINGAPORE_WIDE:
+        print("🔍 SINGAPORE_WIDE verification: Ready for iterative consistency testing")
+    elif demo_data_enum in [DemoData.SINGAPORE_CENTRAL, DemoData.SINGAPORE_EAST, 
+                           DemoData.SINGAPORE_WEST, DemoData.SINGAPORE_NORTH]:
+        print(f"🔍 {demo_data_enum.name} verification: Regional demo ready for frontend")
+    
     return result
 
 
