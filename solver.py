@@ -75,7 +75,7 @@ def create_solver_config(timeout_minutes: int = 15, random_seed: Optional[int] =
 
 def create_development_solver_config(random_seed: Optional[int] = None) -> SolverConfig:
     """Development solver with longer exploration time - 5 minutes max."""
-    print("🔧 Creating DEVELOPMENT solver config (5 minutes max)")
+    print("🔧 Creating DEVELOPMENT solver c onfig (5 minutes max)")
     return create_solver_config(timeout_minutes=5, random_seed=random_seed)
 
 def create_demo_solver_config(random_seed: Optional[int] = None) -> SolverConfig:
@@ -95,8 +95,8 @@ def create_fast_solver_config(random_seed: Optional[int] = None) -> SolverConfig
     """
     print("⚡ Creating FAST solver config (2 minutes max)")
     
-    timeout_seconds = 120  # 2 minutes
-    unimproved_seconds = 30  # 30 seconds convergence
+    timeout_seconds = 40  
+    unimproved_seconds = 10  
     
     if random_seed is not None:
         print(f"🎲 Setting custom random seed: {random_seed}")
@@ -105,8 +105,8 @@ def create_fast_solver_config(random_seed: Optional[int] = None) -> SolverConfig
         print(f"🎲 Generated random seed: {random_seed}")
     
     print(f"📊 Fast solver configuration:")
-    print(f"   Total timeout: 2 minutes (120 seconds)")
-    print(f"   Convergence: 30s without improvement") 
+    print(f"   Total timeout: (40 seconds)")
+    print(f"   Convergence: 10s without improvement") 
     print(f"   Random seed: {random_seed}")
     print(f"   Sufficient time for exploration and variance")
     
@@ -132,8 +132,8 @@ def create_ultra_fast_solver_config(random_seed: Optional[int] = None) -> Solver
     """
     print("⚡⚡ Creating ULTRA-FAST solver config (1 minute max)")
     
-    timeout_seconds = 60   # 1 minute
-    unimproved_seconds = 15  # 15 seconds convergence
+    timeout_seconds = 40   # 1 minute
+    unimproved_seconds = 10  # 15 seconds convergence
     
     if random_seed is not None:
         print(f"🎲 Setting custom random seed: {random_seed}")
@@ -142,8 +142,8 @@ def create_ultra_fast_solver_config(random_seed: Optional[int] = None) -> Solver
         print(f"🎲 Generated random seed: {random_seed}")
     
     print(f"📊 Ultra-fast solver configuration:")
-    print(f"   Total timeout: 1 minute (60 seconds)")
-    print(f"   Convergence: 15s without improvement") 
+    print(f"   Total timeout: (40 seconds)")
+    print(f"   Convergence: 10s without improvement") 
     print(f"   Random seed: {random_seed}")
     print(f"   Minimal but sufficient exploration time")
     

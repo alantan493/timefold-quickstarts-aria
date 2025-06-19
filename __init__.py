@@ -15,6 +15,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# cd python
-# cd vehicle-routing  
-# .\.venv\Scripts\Activate.ps1
